@@ -7,6 +7,9 @@ module.exports = {
     },
     signupUser: (req, res) => {
         res.send("Signup");
+    },
+    free_page:(req,res) => {
+        res.send("Free Pages");
     }
 };
 
