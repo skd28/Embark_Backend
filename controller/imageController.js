@@ -16,6 +16,17 @@ const uploadImage = async (req, res) => {
     }
 };
 
+const getAllImages = async (req, res) => {
+    try {
+        const images = await Image.find();
+        res.json(images);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
 module.exports = {
-    uploadImage
+    uploadImage,
+    getAllImages 
 };

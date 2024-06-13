@@ -3,7 +3,7 @@
 // routes/authRoutes.js
 const express = require('express');
 const { signupUser, loginUser, free_page } = require('../controller/authController');
-const { uploadImage } = require('../controller/imageController');
+const { uploadImage, getAllImages } = require('../controller/imageController');
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../config/cloudinary');
@@ -24,6 +24,8 @@ router.post('/login', loginUser);
 router.post('/signup', signupUser);
 router.post('/free_pages', free_page);
 router.post('/upload', upload.single('image'), uploadImage);
+router.get('/images', getAllImages);
 
 module.exports = router;
 
+          
