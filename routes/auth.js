@@ -3,7 +3,7 @@
 // routes/authRoutes.js
 const express = require('express');
 const { signupUser, loginUser, free_page } = require('../controller/authController');
-const { uploadImage, getAllImages } = require('../controller/imageController');
+const { uploadImage, getAllImages, getImageById, deleteImageById, updateImageById, deleteImagesByIds, deleteAllImages, uploadMultipleImages } = require('../controller/imageController');
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../config/cloudinary');
@@ -25,7 +25,12 @@ router.post('/signup', signupUser);
 router.post('/free_pages', free_page);
 router.post('/upload', upload.single('image'), uploadImage);
 router.get('/images', getAllImages);
+router.get('/images/:id', getImageById);
+//router.delete('/images/:id', deleteImageById) 
+router.delete('/delete_images', deleteImagesByIds);
+router.delete('/delete_all_images', deleteAllImages);
+router.put('/images/:id', upload.single('image'), updateImageById);
+router.post('/upload_many_images', upload.array('images', 10), uploadMultipleImages);
 
 module.exports = router;
 
-          
