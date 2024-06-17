@@ -3,8 +3,8 @@ const Blog = require("../models/Blog");
 
 const createBlog = async (req, res) => {
     try {
-        const { title, descrptions } = req.body;
-        const blog = new Blog({ title, descrptions });
+        const { title, descriptions} = req.body;
+        const blog = new Blog({ title, descriptions });
         await blog.save();
         res.status(201).json({ message: 'Blog post created successfully', blog });
     } catch (err) {
@@ -24,15 +24,20 @@ const getAllBlog = async (req,res) => {
 
 const updateBlog = async (req, res) => {
     try {
-        
         const blog = await Blog.findById(req.params.id);
-        const { title, descrptions } = req.body;
+        const { title, descriptions } = req.body;
+
         if (!blog) {
             return res.status(404).json({ message: 'Blog post not found' });
         }
 
-        blog.title = title || blog.title;
-        blog.descrptions = title || blog.descrptions;
+        if (title !== undefined) {
+            blog.title = title;
+        }
+        if (descriptions !== undefined) {
+            blog.descriptions = descriptions;
+        }
+
         blog.updatedAt = Date.now();
         await blog.save();
         res.json({ message: 'Blog post updated successfully', blog });
@@ -42,9 +47,28 @@ const updateBlog = async (req, res) => {
     }
 }
 
+const deleteBlogId = async (req,res) => {
+
+    try {
+        const blog = await Blog.findByIdAndDelete(req.params.id);
+
+        if (!blog) {
+            return res.status(404).json({ message: 'Blog post not found' });
+        }
+
+        res.json({ message: 'Blog post deleted successfully' });
+           
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+
+
 
 module.exports = {
     createBlog,
     getAllBlog,
-    updateBlog
+    updateBlog,
+    deleteBlogId
 }
