@@ -1,26 +1,31 @@
 const Blog = require("../models/Blog");
-
+const cloudinary = require('../config/cloudinary');
 
 const createBlog = async (req, res) => {
     try {
-        const { title, descriptions} = req.body;
-        const blog = new Blog({ title, descriptions });
+        const { title, descriptions } = req.body;
+        const result = await cloudinary.uploader.upload(req.file.path);
+        const blog = new Blog({
+            title,
+            descriptions,
+            imageurl: result.secure_url,
+            cloudinary_id: result.public_id,
+        });
         await blog.save();
         res.status(201).json({ message: 'Blog post created successfully', blog });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-}
+};
 
-const getAllBlog = async (req,res) => {
-
+const getAllBlog = async (req, res) => {
     try {
         const blogs = await Blog.find();
         res.json(blogs);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-}
+};
 
 const updateBlog = async (req, res) => {
     try {
@@ -45,10 +50,9 @@ const updateBlog = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-}
+};
 
-const deleteBlogId = async (req,res) => {
-
+const deleteBlogId = async (req, res) => {
     try {
         const blog = await Blog.findByIdAndDelete(req.params.id);
 
@@ -57,18 +61,14 @@ const deleteBlogId = async (req,res) => {
         }
 
         res.json({ message: 'Blog post deleted successfully' });
-           
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-}
-
-
-
+};
 
 module.exports = {
     createBlog,
     getAllBlog,
     updateBlog,
     deleteBlogId
-}
+};
