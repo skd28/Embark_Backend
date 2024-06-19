@@ -69,7 +69,7 @@ const deleteImageById = async (req, res) => {
         }
 
         // Debugging log
-        console.log(`Deleting image with ID: ${req.params.id}, Cloudinary ID: ${image.cloudinary_id}`);
+       // console.log(`Deleting image with ID: ${req.params.id}, Cloudinary ID: ${image.cloudinary_id}`);
 
         // Delete image from Cloudinary
         await cloudinary.uploader.destroy(image.cloudinary_id);

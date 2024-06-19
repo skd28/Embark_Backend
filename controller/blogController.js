@@ -54,13 +54,24 @@ const updateBlog = async (req, res) => {
 
 const deleteBlogId = async (req, res) => {
     try {
-        const blog = await Blog.findByIdAndDelete(req.params.id);
+        const blog = await Blog.findById(req.params.id);
 
         if (!blog) {
             return res.status(404).json({ message: 'Blog post not found' });
         }
 
-        res.json({ message: 'Blog post deleted successfully' });
+        // Debugging log to ensure we have the correct blog
+       //console.log(`Deleting blog with ID: ${req.params.id}, Cloudinary ID: ${blog.cloudinary_id}`);
+
+        // Delete the image from Cloudinary
+        if (blog.cloudinary_id) {
+            await cloudinary.uploader.destroy(blog.cloudinary_id);
+        }
+
+        // Delete the blog post from MongoDB
+        await Blog.findByIdAndDelete(req.params.id);
+
+        res.json({ message: 'Blog post and associated image deleted successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
