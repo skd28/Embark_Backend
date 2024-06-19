@@ -25,6 +25,7 @@ router.post('/free_pages', free_page);
 router.post('/upload', upload.single('image'), uploadImage);
 router.get('/images', getAllImages);
 router.get('/images/:id', getImageById);
+router.delete('/delete_image/:id', deleteImageById);
 router.delete('/delete_images', deleteImagesByIds);
 router.delete('/delete_all_images', deleteAllImages);
 router.put('/images/:id', upload.single('image'), updateImageById);

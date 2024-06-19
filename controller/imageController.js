@@ -61,24 +61,28 @@ const getImageById = async (req, res) => {
 // New function to delete an image by ID
 
 
-// const deleteImageById = async (req, res) => {
-//     try {
-//         const image = await Image.findById(req.params.id);
-//         if (!image) {
-//             return res.status(404).json({ message: 'Image not found' });
-//         }
+const deleteImageById = async (req, res) => {
+    try {
+        const image = await Image.findById(req.params.id);
+        if (!image) {
+            return res.status(404).json({ message: 'Image not found' });
+        }
 
-//         // Delete image from Cloudinary
-//         await cloudinary.uploader.destroy(image.cloudinary_id);
+        // Debugging log
+        console.log(`Deleting image with ID: ${req.params.id}, Cloudinary ID: ${image.cloudinary_id}`);
 
-//         // Delete image from MongoDB
-//         await Image.deleteOne({ _id: req.params.id });
+        // Delete image from Cloudinary
+        await cloudinary.uploader.destroy(image.cloudinary_id);
 
-//         res.json({ message: 'Image deleted successfully' });
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// };
+        // Delete image from MongoDB
+        await Image.deleteOne({ _id: req.params.id });
+
+        res.json({ message: 'Image deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting image:', err);  // Improved error logging
+        res.status(500).json({ error: err.message });
+    }
+};
 
 const deleteImagesByIds = async (req, res) => {
     try {
@@ -164,7 +168,7 @@ module.exports = {
     getImageById,
     deleteImagesByIds,
     deleteAllImages,
-    // deleteImageById ,
+     deleteImageById ,
     updateImageById,
     uploadMultipleImages// export the new function
 };
