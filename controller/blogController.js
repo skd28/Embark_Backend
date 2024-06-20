@@ -61,7 +61,7 @@ const deleteBlogId = async (req, res) => {
         }
 
         // Debugging log to ensure we have the correct blog
-       //console.log(`Deleting blog with ID: ${req.params.id}, Cloudinary ID: ${blog.cloudinary_id}`);
+       //      console.log(`Deleting blog with ID: ${req.params.id}, Cloudinary ID: ${blog.cloudinary_id}`);
 
         // Delete the image from Cloudinary
         if (blog.cloudinary_id) {
