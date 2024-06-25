@@ -20,20 +20,29 @@ const uploadImage = async (req, res) => {
 const uploadMultipleImages = async (req, res) => {
     try {
         const uploadPromises = req.files.map(async (file) => {
+           // console.log("Uploaded file path:", file.path);
             const result = await cloudinary.uploader.upload(file.path);
+           // console.log("Cloudinary upload result:", result);
+
+            // Create new Image instance and save to MongoDB
             const image = new Image({
                 url: result.secure_url,
                 cloudinary_id: result.public_id,
             });
+
             await image.save();
-            return image;
+            return {
+                url: result.secure_url,
+                cloudinary_id: result.public_id,
+            };
         });
 
         const images = await Promise.all(uploadPromises);
-
-        res.json({ message: 'Images uploaded successfully', images });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+       // console.log("All Data When upload Images:", images);
+        res.status(200).json({ message: 'Images uploaded successfully', images });
+    } catch (error) {
+        console.error("Error uploading files:", error);
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -69,7 +78,7 @@ const deleteImageById = async (req, res) => {
         }
 
         // Debugging log
-       // console.log(`Deleting image with ID: ${req.params.id}, Cloudinary ID: ${image.cloudinary_id}`);
+        // console.log(`Deleting image with ID: ${req.params.id}, Cloudinary ID: ${image.cloudinary_id}`);
 
         // Delete image from Cloudinary
         await cloudinary.uploader.destroy(image.cloudinary_id);
@@ -168,7 +177,7 @@ module.exports = {
     getImageById,
     deleteImagesByIds,
     deleteAllImages,
-     deleteImageById ,
+    deleteImageById,
     updateImageById,
     uploadMultipleImages// export the new function
 };

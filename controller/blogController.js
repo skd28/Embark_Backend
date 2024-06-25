@@ -2,7 +2,7 @@ const Blog = require("../models/Blog");
 const cloudinary = require('../config/cloudinary');
 
 const createBlog = async (req, res) => {
-    try {
+    try {   
         const { title, descriptions } = req.body;
         const result = await cloudinary.uploader.upload(req.file.path);
         const blog = new Blog({
@@ -27,6 +27,20 @@ const getAllBlog = async (req, res) => {
     }
 };
 
+const getBlogByID = async (req, res) => {
+    try {
+        const blog = await Blog.findById(req.params.id);
+
+        if (!blog) {
+            return res.status(404).json({ message: 'Blog post not found' });
+        }
+
+        res.json(blog);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 const updateBlog = async (req, res) => {
     try {
         const blog = await Blog.findById(req.params.id);
@@ -43,10 +57,20 @@ const updateBlog = async (req, res) => {
             blog.descriptions = descriptions;
         }
 
+        if (req.file) {
+            // Delete the existing image from Cloudinary
+            if (blog.cloudinary_id) {
+                await cloudinary.uploader.destroy(blog.cloudinary_id);
+            }
+            // Upload the new image to Cloudinary
+            const result = await cloudinary.uploader.upload(req.file.path);
+            blog.imageurl = result.secure_url;
+            blog.cloudinary_id = result.public_id;
+        }
+
         blog.updatedAt = Date.now();
         await blog.save();
         res.json({ message: 'Blog post updated successfully', blog });
-
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -59,9 +83,6 @@ const deleteBlogId = async (req, res) => {
         if (!blog) {
             return res.status(404).json({ message: 'Blog post not found' });
         }
-
-        // Debugging log to ensure we have the correct blog
-       //      console.log(`Deleting blog with ID: ${req.params.id}, Cloudinary ID: ${blog.cloudinary_id}`);
 
         // Delete the image from Cloudinary
         if (blog.cloudinary_id) {
@@ -81,5 +102,6 @@ module.exports = {
     createBlog,
     getAllBlog,
     updateBlog,
+    getBlogByID,
     deleteBlogId
 };

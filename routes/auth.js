@@ -4,7 +4,7 @@ const { uploadImage, getAllImages, getImageById, deleteImageById, updateImageByI
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../config/cloudinary');
-const { createBlog, getAllBlog, updateBlog, deleteBlogId } = require('../controller/blogController');
+const { createBlog, getAllBlog, updateBlog, deleteBlogId, getBlogByID } = require('../controller/blogController');
 const router = express.Router();
 
 const storage = new CloudinaryStorage({
@@ -33,9 +33,11 @@ router.post('/upload_many_images', upload.array('images', 10), uploadMultipleIma
 
 // Blog API
 router.post('/blog_create', upload.single('image'), createBlog);
-router.post('/blog_update/:id', updateBlog);
+router.put('/blog_update/:id', upload.single('image'), updateBlog);
+router.get('/blog_get/:id', getBlogByID);  // Changed to router.get
 router.get('/allblogs', getAllBlog);
 router.delete('/blog_delete/:id', deleteBlogId);
 
 module.exports = router;
+
 
