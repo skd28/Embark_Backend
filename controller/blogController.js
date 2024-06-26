@@ -3,11 +3,13 @@ const cloudinary = require('../config/cloudinary');
 
 const createBlog = async (req, res) => {
     try {   
-        const { title, descriptions } = req.body;
+        const { title, descriptions,subtitle,link } = req.body;
         const result = await cloudinary.uploader.upload(req.file.path);
         const blog = new Blog({
             title,
             descriptions,
+            link,
+            subtitle,
             imageurl: result.secure_url,
             cloudinary_id: result.public_id,
         });
@@ -44,7 +46,7 @@ const getBlogByID = async (req, res) => {
 const updateBlog = async (req, res) => {
     try {
         const blog = await Blog.findById(req.params.id);
-        const { title, descriptions } = req.body;
+        const { title, descriptions,link,subtitle } = req.body;
 
         if (!blog) {
             return res.status(404).json({ message: 'Blog post not found' });
@@ -56,6 +58,14 @@ const updateBlog = async (req, res) => {
         if (descriptions !== undefined) {
             blog.descriptions = descriptions;
         }
+        if( link !== undefined)
+        {
+            blog.link = link;
+         }
+         if(subtitle !== undefined)
+         {
+            blog.subtitle = subtitle;
+         }
 
         if (req.file) {
             // Delete the existing image from Cloudinary

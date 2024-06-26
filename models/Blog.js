@@ -17,6 +17,12 @@ const BlogSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    link : {
+        type :String,
+    },
+    subtitle : {
+        type :String
+    }
 });
 
 module.exports = mongoose.model('Blog', BlogSchema);
