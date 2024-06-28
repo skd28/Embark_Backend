@@ -48,7 +48,7 @@ const getBlogByID = async (req, res) => {
 const updateBlog = async (req, res) => {
     try {
         const blog = await Blog.findById(req.params.id);
-        const { title, descriptions,link,subtitle } = req.body;
+        const { title, descriptions,link,subtitle,check } = req.body;
 
         if (!blog) {
             return res.status(404).json({ message: 'Blog post not found' });
@@ -67,6 +67,10 @@ const updateBlog = async (req, res) => {
          if(subtitle !== undefined)
          {
             blog.subtitle = subtitle;
+         }
+         if(check !== undefined)
+         {
+            blog.check = check;
          }
 
         if (req.file) {
