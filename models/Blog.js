@@ -22,6 +22,10 @@ const BlogSchema = new mongoose.Schema({
     },
     subtitle : {
         type :String
+    },
+    check :{
+        type :Boolean,
+        required:true,
     }
 });
 

@@ -10,6 +10,7 @@ const createBlog = async (req, res) => {
             descriptions,
             link,
             subtitle,
+            check : true,
             imageurl: result.secure_url,
             cloudinary_id: result.public_id,
         });
@@ -23,6 +24,7 @@ const createBlog = async (req, res) => {
 const getAllBlog = async (req, res) => {
     try {
         const blogs = await Blog.find();
+        console.log(blogs)
         res.json(blogs);
     } catch (err) {
         res.status(500).json({ error: err.message });
