@@ -5,6 +5,7 @@ const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../config/cloudinary');
 const { createBlog, getAllBlog, updateBlog, deleteBlogId, getBlogByID } = require('../controller/blogController');
+const { createProduct, getAllProduct, getProductId, deleteProductByID, updateProductByID, deleteProductByIDS } = require('../controller/storeController');
 const router = express.Router();
 
 const storage = new CloudinaryStorage({
@@ -33,10 +34,23 @@ router.post('/upload_many_images', upload.array('images', 10), uploadMultipleIma
 
 // Blog API
 router.post('/blog_create', upload.single('image'), createBlog);
-router.put('/blog_update/:id', upload.single('image'), updateBlog);
-router.get('/blog_get/:id', getBlogByID);  // Changed to router.get
 router.get('/allblogs', getAllBlog);
+router.get('/blog_get/:id', getBlogByID); 
 router.delete('/blog_delete/:id', deleteBlogId);
+router.put('/blog_update/:id', upload.single('image'), updateBlog);
+
+
+
+// Store Api
+router.post('/store_create', upload.single('image'), createProduct);
+router.get('/allproducts', getAllProduct);
+router.get('/product_get/:id',getProductId);
+router.delete('/product_delete/:id',deleteProductByID);
+router.delete('/product_deletes',deleteProductByIDS);
+router.put('/product_update/:id',updateProductByID);
+
+
+
 
 module.exports = router;
 

@@ -115,7 +115,7 @@ const deleteImagesByIds = async (req, res) => {
         // Delete images from MongoDB
         await Image.deleteMany({ _id: { $in: ids } });
 
-        res.json({ message: 'Images deleted successfully' });
+        res.status(200).json({ message: 'Images deleted successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

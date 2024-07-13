@@ -34,10 +34,12 @@ const getAllBlog = async (req, res) => {
 const getBlogByID = async (req, res) => {
     try {
         const blog = await Blog.findById(req.params.id);
-
+        
         if (!blog) {
             return res.status(404).json({ message: 'Blog post not found' });
         }
+
+        
 
         res.json(blog);
     } catch (err) {
