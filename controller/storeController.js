@@ -137,7 +137,7 @@ const updateProductByID = async (req, res) => {
 
         if (req.file) {
             // Delete the existing image from Cloudinary
-            if (blog.cloudinary_id) {
+            if (store.cloudinary_id) {
                 await cloudinary.uploader.destroy(store.cloudinary_id);
             }
             // Upload the new image to Cloudinary
@@ -152,7 +152,7 @@ const updateProductByID = async (req, res) => {
 
 
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ "Message for Product Update getting error ": error.message });
     }
 }
 
