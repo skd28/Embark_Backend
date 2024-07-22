@@ -42,7 +42,7 @@ router.put('/blog_update/:id', upload.single('image'), updateBlog);
 
 
 // Store Api
-router.post('/store_create', upload.single('image'), createProduct);
+router.post('/store_create', upload.array('image'), createProduct);
 router.get('/allproducts', getAllProduct);
 router.get('/product_get/:id',getProductId);
 router.delete('/product_delete/:id',deleteProductByID);

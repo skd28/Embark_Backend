@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 const StoreSchema = new mongoose.Schema({
     imageurl: {
-        type: String,
+        type: [String],
         required: true,
     },
     cloudinary_id: {
-        type: String,
+        type: [String],
         required: true,
     },
     title: {

@@ -5,22 +5,35 @@ const Store = require("../models/Store")
 const createProduct = async (req, res) => {
     try {
         const { title, category, descriptions, price, discount, amazon_link, digital_product_link, review, live } = req.body;
-        const result = await cloudinary.uploader.upload(req.file.path);
-        const blog = new Store({
+
+        const uploadPromises = req.files.map(async (file) => {
+            const result = await cloudinary.uploader.upload(file.path);
+            return {
+                imageurl: result.secure_url,
+                cloudinary_id: result.public_id,
+            };
+        });
+
+        const uploadedImages = await Promise.all(uploadPromises);
+        const imageUrls = uploadedImages.map(image => image.imageurl);
+        const cloudinaryIds = uploadedImages.map(image => image.cloudinary_id);
+
+
+        const store = new Store({
             title,
             category,
             descriptions,
             price,
             discount,
             amazon_link,
-            digital_product_link,
+            digital_product_link, 
             review,
             live,
-            imageurl: result.secure_url,
-            cloudinary_id: result.public_id,
+            imageurl: imageUrls,
+            cloudinary_id: cloudinaryIds,
         });
-        await blog.save();
-        res.status(201).json({ message: 'Product created successfully', blog });
+        await store.save();
+        res.status(201).json({ message: 'Product created successfully', store });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -30,7 +43,7 @@ const createProduct = async (req, res) => {
 const getAllProduct = async (req, res) => {
     try {
         const stores = await Store.find();
-       //      console.log(stores)
+        //      console.log(stores)
         res.json(stores);
     } catch (err) {
         res.status(500).json({ error: err.message });
