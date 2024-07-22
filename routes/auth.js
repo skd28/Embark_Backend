@@ -47,10 +47,7 @@ router.get('/allproducts', getAllProduct);
 router.get('/product_get/:id',getProductId);
 router.delete('/product_delete/:id',deleteProductByID);
 router.delete('/product_deletes',deleteProductByIDS);
-router.put('/product_update/:id', upload.single('image'), updateProductByID);
-
-
-
+router.put('/product_update/:id', upload.array('image'), updateProductByID);
 
 module.exports = router;
 

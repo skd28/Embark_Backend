@@ -26,7 +26,7 @@ const createProduct = async (req, res) => {
             price,
             discount,
             amazon_link,
-            digital_product_link, 
+            digital_product_link,
             review,
             live,
             imageurl: imageUrls,
@@ -148,26 +148,39 @@ const updateProductByID = async (req, res) => {
             store.live = live;
         }
 
-        if (req.file) {
-            // Delete the existing image from Cloudinary
-            if (store.cloudinary_id) {
-                await cloudinary.uploader.destroy(store.cloudinary_id);
-            }
-            // Upload the new image to Cloudinary
-            const result = await cloudinary.uploader.upload(req.file.path);
-            store.imageurl = result.secure_url;
-            store.cloudinary_id = result.public_id;
+        if (req.files && req.files.length > 0) {
+            // Delete existing images from Cloudinary
+            // if (store.cloudinary_id && store.cloudinary_id.length > 0) {
+            //     const deletePromises = store.cloudinary_id.map(id => cloudinary.uploader.destroy(id));
+            //     await Promise.all(deletePromises);
+            // }
+
+            // Upload new images to Cloudinary   
+            const uploadPromises = req.files.map(async (file) => {
+                const result = await cloudinary.uploader.upload(file.path);
+                return {
+                    imageurl: result.secure_url,
+                    cloudinary_id: result.public_id,
+                };
+            });
+
+            const uploadedImages = await Promise.all(uploadPromises);
+            const imageUrls = uploadedImages.map(image => image.imageurl);
+            const cloudinaryIds = uploadedImages.map(image => image.cloudinary_id);
+
+            store.imageurl = imageUrls;
+            store.cloudinary_id = cloudinaryIds;
         }
 
         store.updatedAt = Date.now();
         await store.save();
-        res.status(200).json({ message: 'Product  Updated Successfully', store });
-
+        res.status(200).json({ message: 'Product Updated Successfully', store });
 
     } catch (error) {
         res.status(500).json({ "Message for Product Update getting error ": error.message });
     }
 }
+
 
 
 
