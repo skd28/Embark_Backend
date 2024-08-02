@@ -23,7 +23,6 @@ const StoreSchema = new mongoose.Schema({
     },
     price: {
         type: String,
-        required: true
     },
     discount: {
         type: Number,
@@ -35,7 +34,7 @@ const StoreSchema = new mongoose.Schema({
         type: String,
     },
     review : {
-        type: String,
+        type: Number,
     },
     live :{
         type :Boolean,

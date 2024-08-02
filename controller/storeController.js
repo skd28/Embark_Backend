@@ -69,23 +69,25 @@ const deleteProductByID = async (req, res) => {
             return res.status(404).json({ message: 'Product not found' });
         }
 
-        if (store.cloudinary_id) {
-            await cloudinary.uploader.destroy(store.cloudinary_id);
+        // Delete images from Cloudinary if they exist
+        if (store.cloudinary_id && store.cloudinary_id.length > 0) {
+            const deletePromises = store.cloudinary_id.map(id => cloudinary.uploader.destroy(id));
+            await Promise.all(deletePromises);
         }
 
-        // Delete the blog post from MongoDB
+        // Delete the product from MongoDB
         await Store.findByIdAndDelete(req.params.id);
 
         res.json({ message: 'Product deleted successfully' });
-
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
 
+
 const deleteProductByIDS = async (req, res) => {
     try {
-        const { ids } = req.body; // Assume an array of IDs is sent in the request body
+        const { ids } = req.body; // Expect an array of IDs
 
         if (!Array.isArray(ids) || ids.length === 0) {
             return res.status(400).json({ message: 'No IDs provided or IDs is not an array' });
@@ -98,7 +100,7 @@ const deleteProductByIDS = async (req, res) => {
         }
 
         // Delete images from Cloudinary
-        const cloudinaryIds = products.map(product => product.cloudinary_id);
+        const cloudinaryIds = products.flatMap(product => product.cloudinary_id);
         const deletePromises = cloudinaryIds.map(id => cloudinary.uploader.destroy(id));
         await Promise.all(deletePromises);
 
@@ -110,6 +112,7 @@ const deleteProductByIDS = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
 
 
 
