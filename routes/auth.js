@@ -1,11 +1,12 @@
 const express = require('express');
-const { signupUser, loginUser, free_page } = require('../controller/authController');
+// const { signupUser, loginUser, free_page } = require('../controller/authController');
 const { uploadImage, getAllImages, getImageById, deleteImageById, updateImageById, deleteImagesByIds, deleteAllImages, uploadMultipleImages } = require('../controller/imageController');
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../config/cloudinary');
 const { createBlog, getAllBlog, updateBlog, deleteBlogId, getBlogByID } = require('../controller/blogController');
 const { createProduct, getAllProduct, getProductId, deleteProductByID, updateProductByID, deleteProductByIDS } = require('../controller/storeController');
+const { UserSign, UserLogin } = require('../controller/userController');
 const router = express.Router();
 
 const storage = new CloudinaryStorage({
@@ -18,9 +19,9 @@ const storage = new CloudinaryStorage({
 });
 const upload = multer({ storage: storage });
 
-router.post('/login', loginUser);
-router.post('/signup', signupUser);
-router.post('/free_pages', free_page);
+// router.post('/login', loginUser);
+// router.post('/signup', signupUser);
+// router.post('/free_pages', free_page);
 
 // Images API
 router.post('/upload', upload.single('image'), uploadImage);
@@ -35,7 +36,7 @@ router.post('/upload_many_images', upload.array('images', 10), uploadMultipleIma
 // Blog API
 router.post('/blog_create', upload.single('image'), createBlog);
 router.get('/allblogs', getAllBlog);
-router.get('/blog_get/:id', getBlogByID); 
+router.get('/blog_get/:id', getBlogByID);
 router.delete('/blog_delete/:id', deleteBlogId);
 router.put('/blog_update/:id', upload.single('image'), updateBlog);
 
@@ -44,10 +45,14 @@ router.put('/blog_update/:id', upload.single('image'), updateBlog);
 // Store Api
 router.post('/store_create', upload.array('image'), createProduct);
 router.get('/allproducts', getAllProduct);
-router.get('/product_get/:id',getProductId);
-router.delete('/product_delete/:id',deleteProductByID);
-router.delete('/product_deletes',deleteProductByIDS);
+router.get('/product_get/:id', getProductId);
+router.delete('/product_delete/:id', deleteProductByID);
+router.delete('/product_deletes', deleteProductByIDS);
 router.put('/product_update/:id', upload.array('image'), updateProductByID);
+
+// User Login/ Signup
+router.post('/signup',UserSign);
+router.post('/login',UserLogin);
 
 module.exports = router;
 
