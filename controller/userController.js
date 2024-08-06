@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-require('dotenv').config(); 
+require('dotenv').config();
 
 const generateOTP = () => {
   return crypto.randomBytes(4).toString('hex');
@@ -47,7 +47,7 @@ const userSignup = async (req, res) => {
 
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: 'Email already exists' });
     }
     const userExist = await User.findOne({ username });
     if (userExist) {
@@ -88,7 +88,10 @@ const userLogin = async (req, res) => {
       return res.status(400).json({ message: 'Email not verified' });
     }
 
-    return res.status(200).json({ message: 'User Created' });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+
+    res.status(200).json({ message: 'User Created', token, user: { id: user._id, username: user.username, email: user.email } });
+
   } catch (error) {
     console.error('Error during login:', error);
     return res.status(500).json({ message: 'Server error' });
@@ -97,7 +100,7 @@ const userLogin = async (req, res) => {
 
 
 
-const otpVerify =  async (req, res) => {
+const otpVerify = async (req, res) => {
   const { email, otp } = req.body;
 
   const user = await User.findOne({ email });
@@ -114,9 +117,9 @@ const otpVerify =  async (req, res) => {
   user.otpExpires = null;
   await user.save();
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+  //const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });  , token, user: { id: user._id, username: user.username, email: user.email } }
 
-  res.status(200).json({ message: 'OTP verified successfully', token, user: { id: user._id, username: user.username, email: user.email } });
+  res.status(200).json({ message: 'OTP verified successfully' });
 };
 
 module.exports = {
