@@ -49,6 +49,10 @@ const userSignup = async (req, res) => {
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
     }
+    const userExist = await User.findOne({ username });
+    if (userExist) {
+      return res.status(400).json({ message: 'Username already exists' });
+    }
 
     const user = new User({ username, email, password });
     await user.save();

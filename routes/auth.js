@@ -18,6 +18,7 @@ const storage = new CloudinaryStorage({
         public_id: (req, file) => file.originalname.split('.')[0],
     },
 });
+
 const upload = multer({ storage: storage });
 
 // router.post('/login', loginUser);
