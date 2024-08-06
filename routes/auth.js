@@ -6,7 +6,8 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../config/cloudinary');
 const { createBlog, getAllBlog, updateBlog, deleteBlogId, getBlogByID } = require('../controller/blogController');
 const { createProduct, getAllProduct, getProductId, deleteProductByID, updateProductByID, deleteProductByIDS } = require('../controller/storeController');
-const { UserSign, UserLogin } = require('../controller/userController');
+const { userSignup, userLogin, otpVerify } = require('../controller/userController');
+
 const router = express.Router();
 
 const storage = new CloudinaryStorage({
@@ -51,8 +52,10 @@ router.delete('/product_deletes', deleteProductByIDS);
 router.put('/product_update/:id', upload.array('image'), updateProductByID);
 
 // User Login/ Signup
-router.post('/signup',UserSign);
-router.post('/login',UserLogin);
+
+router.post('/signup',userSignup);
+router.post('/login',userLogin);
+router.post('/otp',otpVerify);
 
 module.exports = router;
 
