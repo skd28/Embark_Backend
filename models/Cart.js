@@ -11,11 +11,11 @@ const cartSchema = new mongoose.Schema({
             ref: 'Store',
             required: true,
         },
-        quantity: {
-            type: Number,
-            required: true,
-            default: 1
-        }
+        // quantity: {
+        //     type: Number,
+        //     required: true,
+        //     default: 1
+        // }
     }],
     allow: {
         type: Boolean,

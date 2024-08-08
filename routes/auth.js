@@ -7,7 +7,7 @@ const cloudinary = require('../config/cloudinary');
 const { createBlog, getAllBlog, updateBlog, deleteBlogId, getBlogByID } = require('../controller/blogController');
 const { createProduct, getAllProduct, getProductId, deleteProductByID, updateProductByID, deleteProductByIDS } = require('../controller/storeController');
 const { userSignup, userLogin, otpVerify } = require('../controller/userController');
-const { createCard, allProducts, createCart } = require('../controller/cardController');
+const { createCard, allProducts, createCart, deleteProducts } = require('../controller/cardController');
 
 const router = express.Router();
 
@@ -63,6 +63,7 @@ router.post('/otp',otpVerify);
 
 router.post("/addcart",createCart);
 router.get("/allcart",allProducts);
+router.delete("/delete",deleteProducts);
 
 
 module.exports = router;
